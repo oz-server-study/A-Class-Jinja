@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>My To-Do List</h1>
+<form action="/add" method="post">
+    <input type="text" name="title" placeholder="Enter a new task" required>
+    <button type="submit">Add</button>
+</form>
+
+<table id="todo-table">
+    <thead>
+        <tr>
+            <th style="width: 10%;">완료</th>
+            <th style="width: 10%;">순서</th>
+            <th style="width: 60%;">할 일</th>
+            <th style="width: 20%;">제거</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for index, todo in enumerate(todos) %}
+        <tr class="{{ 'completed' if todo.completed else '' }}" draggable="true" ondragstart="drag(event)" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <td>
+                <form action="/toggle/{{ index }}" method="post" class="toggle-form">
+                    <input type="checkbox" class="checkbox" onchange="this.form.submit()" {% if todo.completed %}checked{% endif %}>
+                </form>
+            </td>
+            <td>{{ index + 1 }}</td>
+            <td>{{ todo.title }}</td>
+            <td>
+                <form action="/delete/{{ index }}" method="post" class="delete-form">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="/static/drag_and_drop.js"></script>
+{% endblock %}
