@@ -13,6 +13,7 @@ templates.env.globals['enumerate'] = enumerate  # Jinja2 환경에 enumerate 함
 # 메모리에 데이터를 저장하는 방식 (간단한 예시)
 todos = []
 
+
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request):
     """
@@ -20,6 +21,7 @@ async def read_index(request: Request):
     모든 To-Do 항목을 표시하는 HTML 페이지를 반환합니다.
     """
     return templates.TemplateResponse("index.html", {"request": request, "todos": todos})
+
 
 @app.post("/add", response_class=RedirectResponse)
 async def add_todo(request: Request, title: str = Form(...)):
@@ -29,6 +31,7 @@ async def add_todo(request: Request, title: str = Form(...)):
     """
     todos.append(TodoItem(title=title))
     return RedirectResponse(url="/", status_code=303)
+
 
 @app.post("/toggle/{index}", response_class=RedirectResponse)
 async def toggle_todo(request: Request, index: int):
@@ -40,6 +43,7 @@ async def toggle_todo(request: Request, index: int):
         raise HTTPException(status_code=404, detail="Item not found")
     todos[index].completed = not todos[index].completed
     return RedirectResponse(url="/", status_code=303)
+
 
 @app.post("/delete/{index}", response_class=RedirectResponse)
 async def delete_todo(request: Request, index: int):
